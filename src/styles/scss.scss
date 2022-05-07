@@ -28,16 +28,13 @@
   padding: 3px;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .keyboard-key-backspace {
   width: 12%;
   max-width: 100px;
 }
-
-
-
-
 
 .active {
   background: orange;
