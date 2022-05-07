@@ -11,9 +11,9 @@ const container = document.createElement('div');
 container.classList.add('container');
 document.body.append(container);
 
-const textareaKeyboard = document.createElement('input');
-textareaKeyboard.type = 'text';
-textareaKeyboard.id = 'input';
+const textareaKeyboard = document.createElement('textarea');
+textareaKeyboard.cols = '50';
+textareaKeyboard.rows = '5';
 textareaKeyboard.classList.add('textareaWindow');
 container.append(textareaKeyboard);
 
@@ -24,9 +24,17 @@ container.append(divKeyboard);
 const keyboard = [
   '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace',
   'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\', 'Delete',
-  'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", 'Enter', 'Shift',
-  'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'Shift',
-  'Control', 'Meta', 'Alt', '&nbsp;', 'Alt', 'Control', 'ArrowLeft', 'ArrowDown', 'ArrowRight',
+  'Caps Lock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", 'Enter', 
+  'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '&uarr;', 'Shift',
+  'Ctrl', '&#10070;', 'Alt', '&nbsp;', 'Alt', 'Ctrl', '&larr;', '&darr;', '&rarr;',
+];
+
+const keyboardUpperCase = [
+  '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'Backspace',
+  'Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|', 'Delete',
+  'Caps Lock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', "\"", 'Enter', 
+  'Shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '&uarr;', 'Shift',
+  'Ctrl', '&#10070;', 'Alt', '&nbsp;', 'Alt', 'Ctrl', '&larr;', '&darr;', '&rarr;',
 ];
 
 const keyboardKeyCode = [
@@ -53,6 +61,9 @@ function init() {
 
 init();
 
+
+
+
 function keydownActive(event) {
   document.querySelectorAll('#keyboard .keyboard-key').forEach((element) => {
     element.classList.remove('active');
@@ -60,17 +71,55 @@ function keydownActive(event) {
   if (!document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`)) return;
   document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.add('active');
   event.preventDefault();
-  if (event.code !== 'Backspace') {
-  textareaKeyboard.value += event.key;
+  if (event.code === 'Backspace') {
+    const startPos = textareaKeyboard.selectionStart;
+    const backspaceKey = textareaKeyboard.value;
+    //textareaKeyboard.value = backspaceKey.substring(0, startPos - 1) + backspaceKey.substring(startPos);
+    if (startPos > 0) {
+    textareaKeyboard.setRangeText('', startPos - 1, startPos, 'end');
+    }
+    //textareaKeyboard.focus();
+   
+  } else if (event.code === 'Tab') {
+    const startPos = textareaKeyboard.selectionStart;
+    textareaKeyboard.setRangeText('    ', startPos, startPos, 'end');
+    console.log(textareaKeyboard.value.code)
+  } else if (event.code === 'Enter') {
+    textareaKeyboard.value += '\n';
+  } else if (event.code === 'Delete') {
+    //const deleteKey = textareaKeyboard.value;
+    const startPos = textareaKeyboard.selectionStart;
+    //textareaKeyboard.value = deleteKey.substring(0, deleteKey.length - 1);
+    textareaKeyboard.setRangeText('', startPos, startPos + 1, 'end');
+  } else {
+    const startPos = textareaKeyboard.selectionStart;
+    const endPos = textareaKeyboard.selectionEnd;
+    const backspaceKey = textareaKeyboard.value;
+    let text = '';
+    text += event.key;
+    
+    
+    textareaKeyboard.value = backspaceKey.substring(0, startPos) + text + backspaceKey.substring(startPos);
+    const pos = textareaKeyboard.value.indexOf(event.key, startPos);
+    // textareaKeyboard.setSelectionRange( textareaKeyboard.selectionStart, textareaKeyboard.selectionStart );
+    // textareaKeyboard.setRangeText( textareaKeyboard.value );
+    // textareaKeyboard.setSelectionRange( textareaKeyboard.selectionEnd, textareaKeyboard.selectionEnd );
+    textareaKeyboard.setRangeText(event.key, pos, pos + 1, 'end');
+    //text.split('').reverse().join('');
+
   }
 }
 
-function backspace() {
-  const backspaceKey = textareaKeyboard.value;
-  textareaKeyboard.value = backspaceKey.substring(0, backspaceKey.length - 1);
-}
 
-document.onkeydown = backspace;
+// function backspace() {
+//   const backspaceKey = textareaKeyboard.value;
+//   console.log(backspaceKey.value);
+//   textareaKeyboard.value = backspaceKey.substring(0, backspaceKey.length - 1);
+// }
+
+// document.querySelector('.keyboard-key-backspace').addEventListener('keydown', backspace);
+
+//document.onkeydown = backspace;
 document.onkeydown = keydownActive;
 
 
