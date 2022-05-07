@@ -44,7 +44,7 @@ const keyboardKeyCode = [
   'ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ArrowUp', 'ShiftRight',
   'ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ControlRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight'];
 
-function init() {
+const init = () => {
   let out = '';
   for (let i = 0; i < keyboard.length; i += 1) {
     if (i === 14 || i === 29 || i === 42 || i === 55) {
@@ -52,11 +52,19 @@ function init() {
     }
      if (i === 13) {
       out += `<div class="keyboard-key keyboard-key-backspace" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
+    } else if (i === 14) {
+    out += `<div class="keyboard-key keyboard-key-tab" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
+    } else if (i === 28 || i === 53 || i === 55 || i === 56 || i === 57 || i === 59 || i === 60 || i === 61 || i === 62 || i === 63) {
+      out += `<div class="keyboard-key keyboard-key-del" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
+    } else if (i === 29 || i === 41 || i === 42 || i === 54) {
+      out += `<div class="keyboard-key keyboard-key-shift" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
+    } else if (i === 58) {
+      out += `<div class="keyboard-key keyboard-key-space" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
     } else {
-    out += `<div class="keyboard-key" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
-    }
-  }
+      out += `<div class="keyboard-key" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
+    } 
   document.querySelector('#keyboard').innerHTML = out;
+}
 }
 
 init();
@@ -64,7 +72,8 @@ init();
 
 
 
-function keydownActive(event) {
+
+const keydownActive = (event) => {
   document.querySelectorAll('#keyboard .keyboard-key').forEach((element) => {
     element.classList.remove('active');
   });
@@ -110,6 +119,10 @@ function keydownActive(event) {
   }
 }
 
+const keyShift = (event) => {
+  
+}
+
 
 // function backspace() {
 //   const backspaceKey = textareaKeyboard.value;
@@ -121,7 +134,7 @@ function keydownActive(event) {
 
 //document.onkeydown = backspace;
 document.onkeydown = keydownActive;
-
+document.onkeydown = keyShift;
 
 
 // document.onkeydown = function (event) {
@@ -134,7 +147,7 @@ document.onkeydown = keydownActive;
 
 // };
 
-function keyupActive(event) {
+const keyupActive = (event) => {
   if (!document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`)) return;
   document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.remove('active');
   event.preventDefault();
