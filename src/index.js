@@ -108,8 +108,8 @@ let keyboardUpperCaseCapsLock = [];
 let keyboardUpperCaseCapsLockShift = [];
 let keyboardUpperCase = [];
 
-const init = () => {
-  if (!langRu) {
+const init = (lang) => {
+  if (!lang) {
     const index = 0;
     keyboard = keyboardRuEn[index];
     keyboardUpperCaseCapsLock = keyboardUpperCaseCapsLockRuEn[index];
@@ -151,7 +151,7 @@ const init = () => {
   }
 };
 
-init();
+init(langRu);
 let keysdown = true;
 
 const keydownActive = (event) => {
@@ -193,14 +193,14 @@ const keydownActive = (event) => {
 
     if (langRu === false) {
       langRu = true;
-      init();
+      init(langRu);
 
       document.querySelector(`#keyboard .keyboard-key[data-set="${event.code}"]`).classList.add('active');
       return;
     }
 
     langRu = false;
-    init();
+    init(langRu);
     document.querySelector(`#keyboard .keyboard-key[data-set="${event.code}"]`).classList.add('active');
   } else if (event.code === 'ControlRight' || event.code === 'AltRight' || event.code === 'AltLeft') {
     textareaKeyboard.value += '';
@@ -336,16 +336,15 @@ const mousedownActive = (e) => {
     textareaKeyboard.value += '';
   } else if (e.target.dataset.set === 'ControlLeft') {
     if (langRu === false) {
-      init();
       langRu = true;
+      init(langRu);
+
       document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).classList.add('active');
-      return langRu;
     }
 
-    init();
     langRu = false;
+    init(langRu);
     document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).classList.add('active');
-    return langRu;
   } else if (e.target.dataset.set === 'AltLeft' || e.target.dataset.set === 'AltRight' || e.target.dataset.set === 'ControlRight') {
     textareaKeyboard.value += '';
   } else if (e.target.dataset.set === 'MetaLeft') {
@@ -482,3 +481,24 @@ document.onmouseup = mouseupActive;
 document.onmouseout = mouseupActiveOut;
 
 document.body.onselectstart = () => false;
+
+function setLocalStorage() {
+  localStorage.setItem('language', langRu);
+}
+
+window.addEventListener('beforeunload', setLocalStorage);
+
+function getLocalStorage() {
+  if (localStorage.getItem('language')) {
+    const language = !!JSON.parse(String(localStorage.getItem('language')).toLowerCase());
+    if (language === false) {
+      langRu = language;
+      init(langRu);
+    } if (language === true) {
+      langRu = language;
+      init(langRu);
+    }
+  }
+}
+
+window.addEventListener('load', getLocalStorage);
