@@ -481,6 +481,4 @@ const mouseupActiveOut = (e) => {
 document.onmouseup = mouseupActive;
 document.onmouseout = mouseupActiveOut;
 
-
-
 document.body.onselectstart = () => false;
