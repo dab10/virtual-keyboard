@@ -74,8 +74,12 @@ const init = () => {
       out += `<div class="keyboard-key keyboard-key-del" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
     } else if (i === 29) {
       out += `<div class="keyboard-key keyboard-key-caps-lock" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
-    } else if (i === 41 || i === 42 || i === 54) {
-      out += `<div class="keyboard-key keyboard-key-shift" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
+    } else if (i === 42) {
+      out += `<div class="keyboard-key keyboard-key-shiftleft" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
+    } else if (i === 54) {
+      out += `<div class="keyboard-key keyboard-key-shiftright" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
+    } else if (i === 41) {
+      out += `<div class="keyboard-key keyboard-key-enter" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
     } else if (i === 58) {
       out += `<div class="keyboard-key keyboard-key-space" data="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
     } else {
@@ -100,23 +104,18 @@ const keydownActive = (event) => {
     document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.add('active');
   }
 
-
-    
   event.preventDefault();
   if (event.code === 'Backspace') {
     const startPos = textareaKeyboard.selectionStart;
-    const backspaceKey = textareaKeyboard.value;
-    // textareaKeyboard.value = backspaceKey.substring(0, startPos - 1) + backspaceKey.substring(startPos);
     if (startPos > 0) {
       textareaKeyboard.setRangeText('', startPos - 1, startPos, 'end');
     }
-    // textareaKeyboard.focus();
   } else if (event.code === 'Tab') {
     const startPos = textareaKeyboard.selectionStart;
     textareaKeyboard.setRangeText('    ', startPos, startPos, 'end');
     // console.log(textareaKeyboard.value.code);
   } else if (event.code === 'Enter') {
-    //textareaKeyboard.value += '\n';
+    // textareaKeyboard.value += '\n';
     const startPos = textareaKeyboard.selectionStart;
     // textareaKeyboard.value = deleteKey.substring(0, deleteKey.length - 1);
     textareaKeyboard.setRangeText('\n', startPos, startPos, 'end');
@@ -126,24 +125,30 @@ const keydownActive = (event) => {
     // textareaKeyboard.value = deleteKey.substring(0, deleteKey.length - 1);
     textareaKeyboard.setRangeText('', startPos, startPos + 1, 'end');
   } else if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    //textareaKeyboard.value += '';
-     
-      if (event.repeat !== undefined) {keysdown = !event.repeat};
-      if (!keysdown) return;
-      keysdown = false;
-      document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.add('active');
+    // textareaKeyboard.value += '';
 
-   
+    if (event.repeat !== undefined) { keysdown = !event.repeat; }
+    if (!keysdown) return;
+    keysdown = false;
+    document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.add('active');
   } else if (event.code === 'CapsLock') {
-    if (event.repeat !== undefined) {keysdown = !event.repeat};
+    if (event.repeat !== undefined) { keysdown = !event.repeat; }
     if (!keysdown) return;
     keysdown = false;
 
-      document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.toggle('active');
-
+    document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.toggle('active');
+  } else if (event.code === 'ControlLeft' || event.code === 'ControlRight') {
+    textareaKeyboard.value += '';
+  } else if (event.code === 'AltLeft' || event.code === 'AltRight') {
+    textareaKeyboard.value += '';
+  } else if (event.code === 'MetaLeft') {
+    textareaKeyboard.value += '';
+  } else if (event.code === 'Space') {
+    const startPos = textareaKeyboard.selectionStart;
+    // textareaKeyboard.value = deleteKey.substring(0, deleteKey.length - 1);
+    textareaKeyboard.setRangeText(' ', startPos, startPos, 'end');
   } else {
     const startPos = textareaKeyboard.selectionStart;
-    const endPos = textareaKeyboard.selectionEnd;
     const backspaceKey = textareaKeyboard.value;
     let text = '';
     text += document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).innerHTML;
@@ -154,13 +159,13 @@ const keydownActive = (event) => {
     // textareaKeyboard.setRangeText( textareaKeyboard.value );
     // textareaKeyboard.setSelectionRange( textareaKeyboard.selectionEnd, textareaKeyboard.selectionEnd );
     textareaKeyboard.setRangeText(document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).innerHTML, pos, pos + 1, 'end');
-    console.log(document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).innerHTML)
+    console.log(document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).innerHTML);
     // text.split('').reverse().join('');
   }
 };
 
 document.addEventListener('keydown', (event) => {
-  if (event.repeat !== undefined) {keysdown = !event.repeat};
+  if (event.repeat !== undefined) { keysdown = !event.repeat; }
   if (!keysdown) return;
   keysdown = false;
 
@@ -168,19 +173,19 @@ document.addEventListener('keydown', (event) => {
     document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
       element.innerHTML = keyboardUpperCase[index];
     });
-   }
+  }
 
-   if ((event.code === 'ShiftLeft' || event.code === 'ShiftRight') && (event.code === 'CapsLock')) {
+  if ((event.code === 'ShiftLeft' || event.code === 'ShiftRight') && (document.querySelector('.keyboard-key-caps-lock').classList.contains('active'))) {
     document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
       element.innerHTML = keyboardUpperCaseCapsLockShift[index];
     });
   }
-  
-  if ((event.code === 'CapsLock' && !document.querySelector('.keyboard-key-caps-lock').classList.contains('active'))) {
+
+  if (!(event.code === 'ShiftLeft' && event.code === 'ShiftRight') && (event.code === 'CapsLock')) {
     document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
       element.innerHTML = keyboardUpperCaseCapsLock[index];
     });
-  } 
+  }
 
   if (event.code === 'CapsLock' && document.querySelector('.keyboard-key-caps-lock').classList.contains('active')) {
     document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
@@ -188,9 +193,24 @@ document.addEventListener('keydown', (event) => {
     });
   }
 
+  if ((document.querySelector('.keyboard-key-shiftleft').classList.contains('active') || document.querySelector('.keyboard-key-shiftright').classList.contains('active')) && (event.code === 'CapsLock')) {
+    document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
+      element.innerHTML = keyboardUpperCaseCapsLockShift[index];
+    });
+  }
 
+  if ((document.querySelector('.keyboard-key-shiftleft').classList.contains('active') || document.querySelector('.keyboard-key-shiftright').classList.contains('active')) && (event.code === 'CapsLock' && document.querySelector('.keyboard-key-caps-lock').classList.contains('active'))) {
+    document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
+      element.innerHTML = keyboardUpperCase[index];
+    });
+  }
+
+  // if (((event.code === 'ShiftLeft' || event.code === 'ShiftRight') && (!document.querySelector('.keyboard-key-caps-lock').classList.contains('active'))) && event.code === 'CapsLock') {
+  //   document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
+  //     element.innerHTML = keyboardUpperCaseCapsLockShift[index];
+  //   });
+  // }
 });
-
 
 document.addEventListener('keyup', (event) => {
   if ((event.code === 'ShiftLeft' || event.code === 'ShiftRight') && (!document.querySelector('.keyboard-key-caps-lock').classList.contains('active'))) {
@@ -199,12 +219,11 @@ document.addEventListener('keyup', (event) => {
     });
   }
 
-
-
-
-
-  
-  
+  if ((event.code === 'ShiftLeft' || event.code === 'ShiftRight') && document.querySelector('.keyboard-key-caps-lock').classList.contains('active')) {
+    document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
+      element.innerHTML = keyboardUpperCaseCapsLock[index];
+    });
+  }
 });
 
 // function backspace() {
@@ -234,7 +253,8 @@ const keyupActive = (event) => {
   if (!document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`)) return;
 
   if (event.code !== 'CapsLock') {
-  document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.remove('active');}
+    document.querySelector(`#keyboard .keyboard-key[data="${event.code}"]`).classList.remove('active');
+  }
   event.preventDefault();
 };
 
@@ -245,7 +265,9 @@ document.querySelectorAll('#keyboard .keyboard-key').forEach((element) => {
 
   function mousedownActive(e) {
     document.querySelectorAll('#keyboard .keyboard-key').forEach((el) => {
-      el.classList.remove('active');
+      if (!(document.querySelector('.keyboard-key-caps-lock').classList.contains('active') || (document.querySelector('.keyboard-key-shiftleft').classList.contains('active') || document.querySelector('.keyboard-key-shiftright').classList.contains('active')))) {
+        el.classList.remove('active');
+      }
     });
     // const code = this.getAttribute('data');
     this.classList.add('active');
@@ -264,14 +286,15 @@ document.querySelectorAll('#keyboard .keyboard-key').forEach((element) => {
 
   function mouseupActive() {
     document.querySelectorAll('#keyboard .keyboard-key').forEach((el) => {
-      el.classList.remove('active');
+      if (!(document.querySelector('.keyboard-key-caps-lock').classList.contains('active') || (document.querySelector('.keyboard-key-shiftleft').classList.contains('active') || document.querySelector('.keyboard-key-shiftright').classList.contains('active')))) {
+        el.classList.remove('active');
+      }
     });
     // const code = this.getAttribute('data');
     this.classList.remove('active');
   }
 
   elLocal.onmouseup = mouseupActive;
-  elLocal.onmouseout = mouseupActive;
 });
 
 // document.onkeydown = function(event) {
@@ -284,3 +307,4 @@ document.querySelectorAll('#keyboard .keyboard-key').forEach((element) => {
 //     keyboard.push(event.key);
 //     console.log(keyboard);
 // };
+document.body.onselectstart = () => false
