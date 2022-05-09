@@ -8,7 +8,7 @@ container.classList.add('container');
 document.body.append(container);
 
 const title = document.createElement('h1');
-title.innerHTML = 'RSS Virtual Keyboard for Windows'
+title.innerHTML = 'RSS Virtual Keyboard for Windows';
 title.classList.add('title');
 container.append(title);
 
@@ -132,7 +132,7 @@ const init = () => {
       out += `<div class="keyboard-key keyboard-key-backspace" data-set="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
     } else if (i === 14) {
       out += `<div class="keyboard-key keyboard-key-tab" data-set="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
-    } else if (i === 28 || i === 53 || i === 55 || i === 56 || i === 57 || i === 59 || i === 60 || i === 61 || i === 62 || i === 63) {
+    } else if (i === 28 || i === 53 || i === 55 || i === 56 || i === 57 || (i >= 59 && i <= 63)) {
       out += `<div class="keyboard-key keyboard-key-del" data-set="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
     } else if (i === 29) {
       out += `<div class="keyboard-key keyboard-key-caps-lock" data-set="${keyboardKeyCode[i]}">${keyboard[i]}</div>`;
@@ -198,6 +198,7 @@ const keydownActive = (event) => {
       document.querySelector(`#keyboard .keyboard-key[data-set="${event.code}"]`).classList.add('active');
       return;
     }
+
     langRu = false;
     init();
     document.querySelector(`#keyboard .keyboard-key[data-set="${event.code}"]`).classList.add('active');
@@ -209,18 +210,16 @@ const keydownActive = (event) => {
     const startPos = textareaKeyboard.selectionStart;
     textareaKeyboard.setRangeText(' ', startPos, startPos, 'end');
   } else {
-    const startPos = textareaKeyboard.selectionStart;
+    const sPos = textareaKeyboard.selectionStart;
     const backspaceKey = textareaKeyboard.value;
     let text = '';
     text += document.querySelector(`#keyboard .keyboard-key[data-set="${event.code}"]`).innerHTML;
 
-    textareaKeyboard.value = backspaceKey.substring(0, startPos) + text + backspaceKey.substring(startPos);
-    const pos = textareaKeyboard.value.indexOf(document.querySelector(`#keyboard .keyboard-key[data-set="${event.code}"]`).innerHTML, startPos);
+    textareaKeyboard.value = backspaceKey.substring(0, sPos) + text + backspaceKey.substring(sPos);
+    const pos = textareaKeyboard.value.indexOf(document.querySelector(`#keyboard .keyboard-key[data-set="${event.code}"]`).innerHTML, sPos);
     textareaKeyboard.setRangeText(document.querySelector(`#keyboard .keyboard-key[data-set="${event.code}"]`).innerHTML, pos, pos + 1, 'end');
   }
 };
-
-const keyCapsLockClass = document.querySelector('.keyboard-key-caps-lock');
 
 document.addEventListener('keydown', (event) => {
   if (event.repeat !== undefined) { keysdown = !event.repeat; }
@@ -303,11 +302,11 @@ document.onkeyup = keyupActive;
 const mousedownActive = (e) => {
   textareaKeyboard.focus();
 
-  if (e.target.classList.contains('container') || e.target.id === 'keyboard' || e.target.classList.contains('body')) {
+  if (e.target.classList.contains('container') || e.target.id === 'keyboard' || e.target.classList.contains('body') || e.target.classList.contains('title') || e.target.classList.contains('langChange')) {
     return false;
   }
 
-  if (e.target.dataset.set !== 'ShiftLeft' && e.target.dataset.set !== 'ShiftRight' && e.target.dataset.set !== 'CapsLock' && !e.target.classList.contains('textareaWindow')) {
+  if (e.target.dataset.set !== 'ShiftLeft' && e.target.dataset.set !== 'ShiftRight' && e.target.dataset.set !== 'CapsLock' && !e.target.classList.contains('textareaWindow') && !e.target.classList.contains('title') && !e.target.classList.contains('langChange')) {
     document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).classList.add('active');
   }
 
@@ -357,13 +356,17 @@ const mousedownActive = (e) => {
     textareaKeyboard.setRangeText(' ', startPos, startPos, 'end');
     textareaKeyboard.focus();
   } else {
-    const startPos = textareaKeyboard.selectionStart;
+    if (e.target.classList.contains('textareaWindow')) {
+      return undefined;
+    }
+
+    const sPos = textareaKeyboard.selectionStart;
     const backspaceKey = textareaKeyboard.value;
     let text = '';
     text += document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).innerHTML;
 
-    textareaKeyboard.value = backspaceKey.substring(0, startPos) + text + backspaceKey.substring(startPos);
-    const pos = textareaKeyboard.value.indexOf(document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).innerHTML, startPos);
+    textareaKeyboard.value = backspaceKey.substring(0, sPos) + text + backspaceKey.substring(sPos);
+    const pos = textareaKeyboard.value.indexOf(document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).innerHTML, sPos);
     textareaKeyboard.setRangeText(document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).innerHTML, pos, pos + 1, 'end');
     textareaKeyboard.focus();
   }
@@ -450,7 +453,7 @@ const mouseupActive = (e) => {
     return false;
   }
 
-  if (e.target.dataset.set !== 'CapsLock') {
+  if (e.target.dataset.set !== 'CapsLock' && !e.target.classList.contains('title') && !e.target.classList.contains('langChange')) {
     document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).classList.remove('active');
     return false;
   }
@@ -458,7 +461,7 @@ const mouseupActive = (e) => {
 };
 
 const mouseupActiveOut = (e) => {
-  if (!document.querySelector(`#keyboard .keyboard-key[data-set="${e.code}"]`)) return;
+  if (!document.querySelector('.body')) { return; }
   if ((e.target.dataset.set === 'ShiftLeft' || e.target.dataset.set === 'ShiftRight') && (!document.querySelector('.keyboard-key-caps-lock').classList.contains('active'))) {
     document.querySelectorAll('#keyboard .keyboard-key').forEach((element, index) => {
       const elLocal17 = element;
@@ -470,12 +473,14 @@ const mouseupActiveOut = (e) => {
     return;
   }
 
-  if (e.target.dataset.set !== 'CapsLock') {
+  if (e.target.dataset.set !== 'CapsLock' && !e.target.classList.contains('title') && !e.target.classList.contains('langChange')) {
     document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).classList.remove('active');
   }
 };
 
 document.onmouseup = mouseupActive;
 document.onmouseout = mouseupActiveOut;
+
+
 
 document.body.onselectstart = () => false;

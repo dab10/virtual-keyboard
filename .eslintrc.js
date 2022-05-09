@@ -12,10 +12,5 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    // 'no-console': 'off',
-    // 'import/prefer-default-export': 'off',
-    // 'indent': [2, 'tab'],
-    'max-len': ['error', 160, {'ignoreUrls': true}],
-    
   },
 };

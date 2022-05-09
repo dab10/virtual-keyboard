@@ -13,6 +13,14 @@
   background-color: rgba(0, 0, 0, 0.2);
 }
 
+.title {
+  cursor: default;
+}
+
+.langChange {
+  cursor: default;
+}
+
 .textareaWindow {
   display: block;
   width: 100%;
@@ -36,13 +44,40 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: 0.1s;
 }
 
 .keyboard-key-backspace {
   width: 12%;
-  max-width: 100px;
+  max-width: 114px;
+}
+
+.keyboard-key-caps-lock {
+  width: 12%;
+  max-width: 114px;
+}
+
+.keyboard-key-enter {
+  width: 12%;
+  max-width: 114px;
+}
+
+.keyboard-key-shiftleft {
+  width: 25%;
+  max-width: 178px;
+}
+
+.keyboard-key-shiftright {
+  width: 12%;
+  max-width: 50px;
+}
+
+.keyboard-key-space {
+  width: 50%;
+  max-width: 434px;
 }
 
 .active {
-  background: orange;
+  border-radius: 50%;
+  background: red;
 }
