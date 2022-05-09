@@ -35,7 +35,7 @@ module.exports = {
   mode: 'development',
   entry: {
     main: './src/index.js',
-    analytics: './src/analytics.js', // OPTIONAL, IF NEED TWO AND MORE .JS
+     
   },
   output: {
     // filename: '[name].[fullhash].js',
