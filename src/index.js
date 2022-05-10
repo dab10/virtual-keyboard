@@ -340,6 +340,7 @@ const mousedownActive = (e) => {
       init(langRu);
 
       document.querySelector(`#keyboard .keyboard-key[data-set="${e.target.dataset.set}"]`).classList.add('active');
+      return false;
     }
 
     langRu = false;
