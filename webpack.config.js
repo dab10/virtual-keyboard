@@ -10,7 +10,7 @@ const isDev = process.env.NODE_ENV === 'development'; // VAR FOR DEVELOPMENT OR 
 const isProd = !isDev;
 
 const optimization = () => {
-  const config = { // CREATE COMMON FILE WITH COMMON LIBRARIES INSTEAD OF EACH LIBRARY FROM EACH FILE
+  const config = { // CREATE COMMON FILE WITH COMMON LIBRARIES INSTEAD OF EACH LIBRRY FROM EACH FILE
     splitChunks: {
       chunks: 'all',
     },
@@ -33,7 +33,7 @@ module.exports = {
   mode: 'development',
   entry: {
     main: './src/index.js',
-     
+
   },
   output: {
     filename: filename('js'),
@@ -43,7 +43,7 @@ module.exports = {
   optimization: optimization(),
   devServer: { // WEBPACK-DEV-SERVER
     port: 4200, // CHOOSE PORT
-    hot: isDev, 
+    hot: isDev,
 
   },
   devtool: isDev ? 'source-map' : false, // View initial files css, js, etc.
